@@ -1,0 +1,2 @@
+# deepseek-ayuda
+siiiiis
