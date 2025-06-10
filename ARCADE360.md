@@ -42,7 +42,7 @@
       height: 40px;
       background-color: limegreen;
       border-radius: 50%;
-      background-image: url('FROG_SPRITE_URL'); /* Reemplaza por tu sprite */
+      background-image: url('FROG_SPRITE_URL'); /* Reemplaza por sprite 8bit rana */
       background-size: cover;
     }
 
@@ -51,7 +51,7 @@
       width: 40px;
       height: 40px;
       background-color: red;
-      background-image: url('CAR_SPRITE_URL'); /* Reemplaza por tu sprite */
+      background-image: url('CAR_SPRITE_URL'); /* Reemplaza por sprite 8bit coche rojo */
       background-size: cover;
       left: 600px;
     }
@@ -90,10 +90,9 @@
 
 <h1>ARCADE 360</h1>
 
-<audio controls autoplay >
-  <source src="Call of Duty_ Black Ops - Dead Ops Arcade song _Clockwork Squares_ James McCawley.mp3" type="audio/mp3">
-  <source src="Call of Duty_ Black Ops - Dead Ops Arcade song _Clockwork Squares_ James McCawley.ogv" type="audio/ogg">
-  Tu navegador no soporta el audio de HTML5.
+<audio id="bg-music" loop autoplay muted>
+  <source src="Call of Duty_ Black Ops - Dead Ops Arcade song _Clockwork Squares_ James McCawley.mp3" type="audio/mpeg">
+  Tu navegador no soporta el audio.
 </audio>
 
 <div id="score">PUNTUACIÓN: 0</div>
@@ -102,7 +101,7 @@
 <div id="game">
   <div id="frog"></div>
   <div id="game-over" class="overlay-text">¡GAME OVER!</div>
-  <div id="pause-text" class="overlay-text">⏸ PAUSA</div>
+  <div id="pause-text" class="overlay-text">⏸️ PAUSA</div>
 </div>
 
 <script>
@@ -116,8 +115,8 @@
 
   let score = 0;
   let level = 1;
-  let lanes = 5;
-  let laneHeight = game.clientHeight / 10;
+  const lanes = 5;
+  let laneHeight = game.clientHeight / lanes;
   let currentLane = 0;
   let spawnInterval;
   let gameRunning = true;
@@ -128,8 +127,7 @@
     let laneColors = [];
     for (let i = 0; i < lanes; i++) {
       const percentTop = ((i + 1) / lanes) * 100;
-      const color = i < 5 ? "#111" : "#FFD700";
-      laneColors.push(`${color} ${100 - percentTop}%`);
+      laneColors.push(`#111 ${100 - percentTop}%`);
     }
     game.style.background = `linear-gradient(to top, ${laneColors.join(", ")})`;
   }
@@ -137,7 +135,6 @@
   function resetGame() {
     score = 0;
     level = 1;
-    lanes = 5;
     currentLane = 0;
     frog.style.top = `${game.clientHeight - laneHeight}px`;
     scoreDisplay.textContent = `PUNTUACIÓN: ${score}`;
@@ -234,11 +231,9 @@
         if (gameRunning) {
           score++;
           scoreDisplay.textContent = `PUNTUACIÓN: ${score}`;
-          if (score % 10 === 0 && lanes < 10) {
+          if (score % 10 === 0) {
             level++;
-            lanes++;
             levelDisplay.textContent = `NIVEL: ${level}`;
-            updateLaneBackground();
           }
         }
       }
@@ -249,7 +244,6 @@
     spawnInterval = setInterval(spawnObstacle, Math.max(500, 1800 - level * 100));
   }
 
-  // Iniciar música tras interacción del usuario
   function tryPlayMusic() {
     bgMusic.muted = false;
     bgMusic.play().catch(() => {});
@@ -266,7 +260,6 @@
 
   window.addEventListener("click", tryPlayMusic);
 
-  // Inicio
   frog.style.top = `${game.clientHeight - laneHeight}px`;
   updateLaneBackground();
   startSpawning();
@@ -274,3 +267,4 @@
 
 </body>
 </html>
+
